@@ -1,10 +1,8 @@
-﻿#include "GraphicalChartsDS.h"
-#include "BMP.h"
+﻿#include "Charts.h"
+#include "Image.h"
 #include <vector>
 
 using namespace  std;
-using namespace BMP;
-using namespace GraphicalCharts;
 
 int main()
 {
@@ -30,16 +28,17 @@ int main()
 	chart.ShowFrame(true);
 	chart.ShowFrameCorners(true);
 	chart.DrawTowerChart(node);
+	chart.ShowFrame(true);
+	chart.ShowFrameCorners(true);
+	chart.Update();
+
 	chart2.ShowFrame(true);
 	chart2.ShowXY(true);
 	chart2.DrawLineChart(node);
+	chart2.Update();
+
 	chart3.DrawPieChart(node);
 	chart3.ShowFrame(true);
-	chart.ShowFrame(true);
-	chart.ShowFrameCorners(true);
-	
-	chart.Update();
-	chart2.Update();
 	chart3.Update();
 	
     return 0;
