@@ -6,7 +6,7 @@ void Charts::ShowXY(const bool& show = true)
     {
         RGBColor lineColor;
         if (frame.GetXYColor().IsEmpty())
-            lineColor = GenerateColor(GenerateSeed());
+            lineColor = GenerateColor(NULL);
         else
             lineColor = frame.GetXYColor();
 
@@ -128,7 +128,7 @@ void Charts::DrawLineChart(const std::vector<DataNode>& data_nodes) {
     int64_t partialPoint = ceil(frame.GetDistance(frame.BottomLeft, frame.BottomRight) / data_nodes.size());
 
     Point pointCenter = frame.BottomLeft;
-    RGBColor lineColor = GenerateColor(GenerateSeed());
+    RGBColor lineColor = GenerateColor(NULL);
 
     for (DataNode node : data_nodes) {
         img.DrawLine(pointCenter.x, pointCenter.y, pointCenter.x + partialPoint, GetPositionByPercent(node.percent, maxHeight), lineColor);

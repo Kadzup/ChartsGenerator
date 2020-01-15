@@ -14,6 +14,7 @@ public:
     DataNode(string _title) : title(_title), value(0), percent(0) {}
     DataNode(string _title, double _value) : title(_title), value(_value), percent(0) {}
     DataNode(string _title, double _value, int64_t _percent) : title(_title), value(_value), percent(_percent) {}
+	
 public:
     string title;
     int64_t percent;
@@ -42,52 +43,32 @@ private:
     RGBColor GenerateColor(const uint64_t& seed)
     {
         srand(seed);
-
-        uint8_t r = rand() % 255 + 1, g = rand() % 255 + 1, b = rand() % 255 + 1;
-
-        return RGBColor{ r, g ,b };
-    }
-    uint64_t GenerateSeed()
-    {
-        srand(time(NULL) + sizeof(RGBColor));
-
-        time_t curr_time;
-        curr_time = time(NULL);
-
-        tm* tm_local = localtime(&curr_time);
-
-        uint32_t dist = curr_time;
-
-        if (rand() % 10 + 1 == 1)
-            dist += frame.GetDistance(frame.TopLeft, frame.BottomRight) * 5;
-        else if (rand() % 10 + 1 == 2)
-            dist += frame.GetDistance(frame.Top, frame.Bottom) * 5;
-        else if (rand() % 10 + 1 == 3)
-            dist += frame.GetDistance(frame.TopRight, frame.Left) * 5;
-        else if (rand() % 10 + 1 == 4)
-            dist += frame.GetDistance(frame.Right, frame.BottomLeft) * 5;
-        else if (rand() % 10 + 1 >= 5)
-            dist += frame.GetDistance(frame.BottomRight, frame.Top) * 5;
-
-        return img.Width() * img.Height() + time(NULL) * tm_local->tm_sec + tm_local->tm_hour * tm_local->tm_year + dist;
+        return RGBColor{ rand() % 255 + 1, rand() % 255 + 1 , rand() % 255 + 1 };
     }
 
 public:
+	/* Show/Hide Charts Frame area */
     void ShowFrame(const bool& show);
+    /* Show/Hide Charts Frame Corners area */
     void ShowFrameCorners(const bool& show);
+    /* Show/Hide XY Charts lines */
     void ShowXY(const bool& show);
 
+	/* Build Tower Charts on Image */
     void DrawTowerChart(const std::vector<DataNode>& data_nodes);
+	/* Build Line Charts on Image */
     void DrawLineChart(const std::vector<DataNode>& data_nodes);
-
+	/* Build Pie Charts on Image */
     void DrawPieChart(const std::vector<DataNode>& data_nodes);
 
-    inline Image GetImage() { return this->img; }
+	/* Get Current Image */
+    inline Image GetImage() { return img; }
 
     Frame frame;
     Image img;
 
-    inline void Update() { this->img.Save(); }
+	/* Update Image */
+    inline void Update() { img.Save(); }
 
 private:
     bool isVisible;
