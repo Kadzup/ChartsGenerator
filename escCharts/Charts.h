@@ -43,7 +43,7 @@ private:
     RGBColor GenerateColor(const uint64_t& seed)
     {
         srand(seed);
-        return RGBColor{ rand() % 255 + 1, rand() % 255 + 1 , rand() % 255 + 1 };
+        return RGBColor{ (uint8_t)(rand() % 255 + 1), (uint8_t)(rand() % 255 + 1), (uint8_t)(rand() % 255 + 1) };
     }
 
 public:

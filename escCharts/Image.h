@@ -7,7 +7,9 @@
 #include <fstream>
 #include <iostream>
 #include <cassert>
+#include <vector>
 
+using namespace std;
 using std::string;
 using std::int64_t;
 using std::uint32_t;
@@ -122,6 +124,6 @@ private:
     ofstream outFile;
     string outFileName;
     RGBColor backgroundColor;
-    RGBColor** buffer;
+    vector<vector<RGBColor>> buffer;
 };
 

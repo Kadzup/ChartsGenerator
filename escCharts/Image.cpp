@@ -2,13 +2,7 @@
 
 Image::~Image()
 {
-    if (buffer != NULL) {
-        for (int64_t i = 0; i < height; ++i) {
-            delete[] buffer[i];
-        }
-        delete[] buffer;
-        buffer = NULL;
-    }
+    buffer.clear();
 }
 
 Image::Image(const Image& _image)
@@ -52,20 +46,21 @@ void Image::Init(int64_t _width, int64_t _height)
     assert(_width > 0 and _height > 0);
     width = _width;
     height = _height;
-    buffer = NULL;
     outFileName = "image.bmp";
+    buffer.clear();
     backgroundColor = RGBColor(255, 255, 255);
 }
 
 void Image::Setup()
 {
     try {
-        buffer = new RGBColor * [height];
-        for (int64_t y = 0; y < height; ++y) {
-            buffer[y] = new RGBColor[width];
-
-            for (int64_t x = 0; x < width; ++x) {
-                buffer[y][x] = backgroundColor;
+    	//buffer = vector<vector<RGBColor> >(width, vector<RGBColor>(height));
+        for (int64_t i = 0; i < height; i++)
+        {
+            buffer.push_back(vector <RGBColor>());
+            for (int64_t j = 0; j < width; j++)
+            {
+                buffer[i].push_back(backgroundColor);
             }
         }
     }
@@ -359,6 +354,10 @@ void Image::Save()
 
 RGBColor Image::GetPixelColor(const int64_t& x, const int64_t& y) const
 {
-    auto temp = buffer[x][y];
-    return temp;
+    int _x, _y;
+    _x = x; _y = y;
+    if (_x <= Width() && _y <= Height())
+        return RGBColor{ buffer[_x][_y].r, buffer[_x][_y].g, buffer[_x][_y].b };
+    else
+        return backgroundColor;
 }
