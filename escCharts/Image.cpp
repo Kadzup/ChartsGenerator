@@ -227,6 +227,7 @@ void Image::SmartFill(int64_t x, int64_t y, RGBColor fillColor, RGBColor borderC
     int XMAX, YMAX;
     XMAX = Width();
     YMAX = Height();
+    XMAX -= 1; YMAX -= 1;
     // Light as many pixels as possible on line y	
     // and determine x_left and x_right	
     x_left = x_right = x;
@@ -241,23 +242,29 @@ void Image::SmartFill(int64_t x, int64_t y, RGBColor fillColor, RGBColor borderC
         SetPixel(x_right, y, fillColor);
         x_right++;
     }
-    // Recursive calls of FloodFill for two remote points	
+	
     x = (x_right + x_left) >> 1; //shifting means division by 2	
     for (i = -1; i <= 1; i += 2)
     {
         YY = y;
-        while (GetPixelColor(x, YY) != borderColor && YY < YMAX && YY>0) YY += i;
+        while (GetPixelColor(x, YY) != borderColor && YY < YMAX && YY>0) 
+            YY += i;
+    	
         YY = (y + YY) >> 1;
-        if (GetPixelColor(x, YY) != borderColor && GetPixelColor(x, YY) != fillColor) SmartFill(x, YY, fillColor, borderColor);
+    	
+        if (GetPixelColor(x, YY) != borderColor && GetPixelColor(x, YY) != fillColor) 
+            SmartFill(x, YY, fillColor, borderColor);
     }
     // Recursive calls for all "dark" (not filled) pixels next	
     // to the line y (with x values between x_left and x_right	
     for (YY = y - 1; YY <= y + 1; YY += 2)
     {
         x = x_left + 1;
+    	
         while (x < x_right && YY>0 && YY < YMAX)
         {
-            if (GetPixelColor(x, YY) != borderColor && GetPixelColor(x, YY) != fillColor) SmartFill(x, YY, fillColor, borderColor);
+            if (GetPixelColor(x, YY) != borderColor && GetPixelColor(x, YY) != fillColor) 
+                SmartFill(x, YY, fillColor, borderColor);
             x++;
         }
     }
@@ -357,7 +364,7 @@ RGBColor Image::GetPixelColor(const int64_t& x, const int64_t& y) const
     int _x, _y;
     _x = x; _y = y;
     if (_x <= Width() && _y <= Height())
-        return RGBColor{ buffer[_x][_y].r, buffer[_x][_y].g, buffer[_x][_y].b };
+        return buffer[_x][_y];
     else
         return backgroundColor;
 }

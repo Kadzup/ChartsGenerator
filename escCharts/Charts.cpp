@@ -162,7 +162,7 @@ void Charts::DrawCircleSelection(const Point& Center, const uint64_t& radius, co
         img.SetPixel(Center.x + (radius - 5) * cos(i), Center.y + (radius - 5) * sin(i), fillColor, false);
     }
 
-    img.SmartFill(Center.x + (radius - 5) * cos(GetRadians(angleBegin)), Center.y + (radius - 5) * sin(GetRadians(angleBegin)), fillColor, fillColor);
+    img.SmartFill(Center.x, Center.y, fillColor, fillColor);
 }
 
 void Charts::DrawPieChart(const std::vector<DataNode>& data_nodes)
