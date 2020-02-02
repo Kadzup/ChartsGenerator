@@ -21,7 +21,7 @@ int main()
 	
     Image img(720, 480, pathName + "sample1.bmp", COLOR_WHITE);
     Image img2(720, 480, pathName + "sample2.bmp", COLOR_WHITE);
-    Image img3(200, 200, pathName + "sample3.bmp", COLOR_WHITE);
+    Image img3(720, 720, pathName + "sample3.bmp", COLOR_WHITE);
 	
 	Charts chart(img);
 	Charts chart2(img2);

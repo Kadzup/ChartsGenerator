@@ -72,7 +72,7 @@ void Image::Setup()
 
 void Image::SetPixel(int64_t x, int64_t y, const RGBColor& color, bool ignore_err = false)
 {
-    if (ignore_err and not(x >= 0 and y >= 0 and x < width and y < height)) return;
+    if (ignore_err and not(x >= 0 and y >= 0 and x < width-1 and y < height-1)) return;
     assert(x >= 0 and y >= 0 and x < width and y < height);
     buffer[y][x] = color;
 }
@@ -224,20 +224,20 @@ void Image::SetFileName(const string& _outFileName)
 void Image::FloodFillUtil(int64_t x, int64_t y, RGBColor prevColor, RGBColor newColor)
 {
     // Base cases 
-    if (x < 0 || y < 0 || x >= buffer[0].size() || y >= buffer.size())
+    if (x < 0 || y < 0 || x >= buffer[0].size()-1 || y >= buffer.size()-1)
         return;
 	
-    if (GetPixelColor(x,y) != prevColor)
+    if (buffer[x][y] != prevColor)
         return;
 
     // Replace the color at (x, y) 
-    buffer[x][y] = newColor;
+    SetPixel(x, y, newColor);
 
     // Recur for north, east, south and west 
     FloodFillUtil(x + 1, y, prevColor, newColor);
-    FloodFillUtil(x - 1, y, prevColor, newColor);
-    FloodFillUtil(x, y + 1, prevColor, newColor);
-    FloodFillUtil(x, y - 1, prevColor, newColor);
+    //FloodFillUtil(x - 1, y, prevColor, newColor);
+    //FloodFillUtil(x, y + 1, prevColor, newColor);
+    //FloodFillUtil(x, y - 1, prevColor, newColor);
 }
 
 // It mainly finds the previous color on (x, y) and 
