@@ -1,25 +1,11 @@
 #pragma once
 #include "Frame.h"
 #include "Image.h"
+#include "DataTable.h"
 #include <vector>
 #include <ctime>
 
 #define M_PI 3.141592653589793238462643383279502884
-
-class DataNode
-{
-public:
-    ~DataNode() {}
-    DataNode() : title("Lorem"), value(0), percent(0) {}
-    DataNode(string _title) : title(_title), value(0), percent(0) {}
-    DataNode(string _title, double _value) : title(_title), value(_value), percent(0) {}
-    DataNode(string _title, double _value, int64_t _percent) : title(_title), value(_value), percent(_percent) {}
-	
-public:
-    string title;
-    int64_t percent;
-    double value;
-};
 
 class Charts
 {

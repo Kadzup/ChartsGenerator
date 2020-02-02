@@ -114,7 +114,7 @@ void Charts::DrawTowerChart(const std::vector<DataNode>& data_nodes)
     Point containerCenter = Point{ frame.BottomLeft.x + containerWidth / 2, frame.BottomLeft.y };
 
     for (DataNode node : data_nodes) {
-        containerCenter.y = GetPositionByPercent(node.percent, maxHeight);
+        containerCenter.y = GetPositionByPercent(node.percent+5, maxHeight);
         DrawTower(containerCenter, containerWidth);
         containerCenter.x += containerWidth;
     }
@@ -149,6 +149,8 @@ void Charts::DrawRectangleByLines(const Point& TopLeft, const Point& BottomRight
 
 void Charts::DrawCircleSelection(const Point& Center, const uint64_t& radius, const double& angleBegin, const double& angleEnd, const RGBColor& fillColor)
 {
+    int64_t selX, selY;
+    bool wasFounded = false;
     img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(GetRadians(angleBegin)), Center.y + (radius - 5) * sin(GetRadians(angleBegin)), fillColor);
 
     auto angleMiddle = angleEnd - angleBegin;
@@ -159,10 +161,17 @@ void Charts::DrawCircleSelection(const Point& Center, const uint64_t& radius, co
 
     for (double i = GetRadians(angleBegin); i <= GetRadians(angleEnd - 1); i += 0.0001)
     {
+    	if(i >= GetRadians(angleEnd/2 - 1) && !wasFounded)
+    	{
+            selX = Center.x + (radius - 25) * cos(i);
+            selY = Center.y + (radius - 25) * sin(i);
+            wasFounded = true;
+    	}
+
         img.SetPixel(Center.x + (radius - 5) * cos(i), Center.y + (radius - 5) * sin(i), fillColor, false);
     }
 
-    img.SmartFill(Center.x, Center.y, fillColor, fillColor);
+    img.FloodFill(selX, selY, fillColor);
 }
 
 void Charts::DrawPieChart(const std::vector<DataNode>& data_nodes)

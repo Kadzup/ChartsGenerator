@@ -221,53 +221,31 @@ void Image::SetFileName(const string& _outFileName)
     outFileName = _outFileName;
 }
 
-void Image::SmartFill(int64_t x, int64_t y, RGBColor fillColor, RGBColor borderColor)
+void Image::FloodFillUtil(int64_t x, int64_t y, RGBColor prevColor, RGBColor newColor)
 {
-    int x_left, x_right, YY, i;
-    int XMAX, YMAX;
-    XMAX = Width();
-    YMAX = Height();
-    XMAX -= 1; YMAX -= 1;
-    // Light as many pixels as possible on line y	
-    // and determine x_left and x_right	
-    x_left = x_right = x;
-    while (GetPixelColor(x_left, y) != borderColor && x_left > 0)
-    {
-        SetPixel(x_left, y, fillColor);
-        x_left--;
-    }
-    x_right++;
-    while (GetPixelColor(x_right, y) != borderColor && x_right < XMAX)
-    {
-        SetPixel(x_right, y, fillColor);
-        x_right++;
-    }
+    // Base cases 
+    if (x < 0 || y < 0 || x >= buffer[0].size() || y >= buffer.size())
+        return;
 	
-    x = (x_right + x_left) >> 1; //shifting means division by 2	
-    for (i = -1; i <= 1; i += 2)
-    {
-        YY = y;
-        while (GetPixelColor(x, YY) != borderColor && YY < YMAX && YY>0) 
-            YY += i;
-    	
-        YY = (y + YY) >> 1;
-    	
-        if (GetPixelColor(x, YY) != borderColor && GetPixelColor(x, YY) != fillColor) 
-            SmartFill(x, YY, fillColor, borderColor);
-    }
-    // Recursive calls for all "dark" (not filled) pixels next	
-    // to the line y (with x values between x_left and x_right	
-    for (YY = y - 1; YY <= y + 1; YY += 2)
-    {
-        x = x_left + 1;
-    	
-        while (x < x_right && YY>0 && YY < YMAX)
-        {
-            if (GetPixelColor(x, YY) != borderColor && GetPixelColor(x, YY) != fillColor) 
-                SmartFill(x, YY, fillColor, borderColor);
-            x++;
-        }
-    }
+    if (GetPixelColor(x,y) != prevColor)
+        return;
+
+    // Replace the color at (x, y) 
+    buffer[x][y] = newColor;
+
+    // Recur for north, east, south and west 
+    FloodFillUtil(x + 1, y, prevColor, newColor);
+    FloodFillUtil(x - 1, y, prevColor, newColor);
+    FloodFillUtil(x, y + 1, prevColor, newColor);
+    FloodFillUtil(x, y - 1, prevColor, newColor);
+}
+
+// It mainly finds the previous color on (x, y) and 
+// calls FloodFillUtil() 
+void Image::FloodFill(int64_t x, int64_t y, RGBColor newColor)
+{
+    RGBColor prevColor = GetPixelColor(x, y);
+    FloodFillUtil(x, y, prevColor, newColor);
 }
 
 void Image::Save(const string& _outFileName)
@@ -361,10 +339,8 @@ void Image::Save()
 
 RGBColor Image::GetPixelColor(const int64_t& x, const int64_t& y) const
 {
-    int _x, _y;
-    _x = x; _y = y;
-    if (_x <= Width() && _y <= Height())
-        return buffer[_x][_y];
+    if (x <= buffer[0].size()-1 && y <= buffer.size()-1)
+        return buffer[x][y];
     else
         return backgroundColor;
 }

@@ -1,4 +1,5 @@
 ﻿#include "Charts.h"
+#include "DataTable.h"
 #include "Image.h"
 #include <vector>
 
@@ -6,16 +7,15 @@ using namespace  std;
 
 int main()
 {
-	std::vector<DataNode> node;
-	node.push_back(DataNode{ "test", 5 ,7 });
-	node.push_back(DataNode{ "test", 5 ,5 });
-	node.push_back(DataNode{ "test", 5 ,13 });
-	node.push_back(DataNode{ "test", 5, 5 });
-	node.push_back(DataNode{ "test", 5, 7 });
-	node.push_back(DataNode{ "test", 5, 23 });
-	node.push_back(DataNode{ "test", 5, 10 });
-	node.push_back(DataNode{ "test", 5, 12 });
-	node.push_back(DataNode{ "test", 5, 18 });
+	DataTable table;
+	table.Add("text1", 20);
+	table.Add("text1", 15);
+	table.Add("text1", 78);
+	table.Add("text1", 11);
+	table.Add("text1", 302);
+	table.Add("text1", 200);
+	table.Add("text1", 87);
+	table.Add("text1", 9);
 	
     string pathName = "out/";
 	
@@ -29,18 +29,17 @@ int main()
 
 	chart.ShowFrame(true);
 	chart.ShowFrameCorners(true);
-	chart.DrawTowerChart(node);
+	chart.DrawTowerChart(table.GetNodes());
 	chart.ShowFrame(true);
 	chart.ShowFrameCorners(true);
 	chart.Update();
 
 	chart2.ShowFrame(true);
 	chart2.ShowXY(true);
-	chart2.DrawLineChart(node);
+	chart2.DrawLineChart(table.GetNodes());
 	chart2.Update();
 
-	//img3.IsBufferValid();
-	chart3.DrawPieChart(node);
+	chart3.DrawPieChart(table.GetNodes());
 	chart3.ShowFrame(true);
 	chart3.Update();
 	

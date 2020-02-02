@@ -88,9 +88,9 @@ public:
     void Save();
 
 	/* Get Image Width */
-    inline int64_t Width() const { return width; }
+    inline int64_t Width() const { return this->width; }
 	/* Get Image Height */
-    inline int64_t Height() const { return height; }
+    inline int64_t Height() const { return this->height; }
 
 	/* Get BackGround Color */
     inline RGBColor GetBGColor() const { return backgroundColor; }
@@ -112,6 +112,8 @@ public:
     /* Get Color of Pixel on current Point coordinate */
     RGBColor GetPixelColor(const int64_t& x, const int64_t& y) const;
 
+    void FloodFill(int64_t x, int64_t y, RGBColor newColor);
+	
 	bool IsBufferValid()
 	{
 		for(uint64_t i = 0; i < buffer.size(); i++)
@@ -132,6 +134,9 @@ private:
     void DrawLineLow(int64_t x0, int64_t y0, int64_t x1, int64_t y1, const RGBColor& color);
     void DrawLineHigh(int64_t x0, int64_t y0, int64_t x1, int64_t y1, const RGBColor& color);
 
+
+    void FloodFillUtil(int64_t x, int64_t y, RGBColor prevColor, RGBColor newColor);
+	
     int64_t width;
     int64_t height;
     ofstream outFile;

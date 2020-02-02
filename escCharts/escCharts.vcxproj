@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Charts.cpp" />
+    <ClCompile Include="DataTable.cpp" />
     <ClCompile Include="escCharts.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Image.cpp" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Charts.h" />
+    <ClInclude Include="DataTable.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Point.h" />
