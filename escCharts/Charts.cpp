@@ -157,9 +157,9 @@ void Charts::DrawCircleSelection(const Point& Center, const uint64_t& radius, co
 
     img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(GetRadians(angleEnd - 1)), Center.y + (radius - 5) * sin(GetRadians(angleEnd - 1)), fillColor);
 
-    for (double i = GetRadians(angleBegin); i <= GetRadians(angleEnd - 1); i += 0.0001)
+    for (double i = GetRadians(angleBegin); i <= GetRadians(angleEnd - 1); i += 0.001)
     {
-        img.SetPixel(Center.x + (radius - 5) * cos(i), Center.y + (radius - 5) * sin(i), fillColor, false);
+         img.SetPixel(Center.x + (radius - 5) * cos(i), Center.y + (radius - 5) * sin(i), fillColor, false);
     }
 
     //img.FloodFill(Center.x + (radius - 5) * cos(GetRadians(angleBegin)), Center.y + (radius - 5) * sin(GetRadians(angleBegin)), fillColor);
