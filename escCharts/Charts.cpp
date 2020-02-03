@@ -88,6 +88,13 @@ void Charts::ShowFrameCorners(const bool& show = true)
     }
 }
 
+void Charts::DrawRectangleByLines(const Point& TopLeft, const Point& BottomRight, const RGBColor& outlineColor) {
+    img.DrawLine(TopLeft.x, TopLeft.y, TopLeft.x, BottomRight.y, outlineColor);
+    img.DrawLine(TopLeft.x, BottomRight.y, BottomRight.x, BottomRight.y, outlineColor);
+    img.DrawLine(BottomRight.x, BottomRight.y, BottomRight.x, TopLeft.y, outlineColor);
+    img.DrawLine(BottomRight.x, TopLeft.y, TopLeft.x, TopLeft.y, outlineColor);
+}
+
 void Charts::DrawTower(const Point& Top, const int64_t& containerWidth, int64_t spacing = 5)
 {
     assert(Top.x >= 0 and Top.y >= 0 and Top.x < img.Width() and Top.y < img.Height());
@@ -140,27 +147,26 @@ void Charts::DrawLineChart(const std::vector<DataNode>& data_nodes) {
     }
 }
 
-void Charts::DrawRectangleByLines(const Point& TopLeft, const Point& BottomRight, const RGBColor& outlineColor) {
-    img.DrawLine(TopLeft.x, TopLeft.y, TopLeft.x, BottomRight.y, outlineColor);
-    img.DrawLine(TopLeft.x, BottomRight.y, BottomRight.x, BottomRight.y, outlineColor);
-    img.DrawLine(BottomRight.x, BottomRight.y, BottomRight.x, TopLeft.y, outlineColor);
-    img.DrawLine(BottomRight.x, TopLeft.y, TopLeft.x, TopLeft.y, outlineColor);
-}
-
 void Charts::DrawCircleSelection(const Point& Center, const uint64_t& radius, const double& angleBegin, const double& angleEnd, const RGBColor& fillColor)
 {
-    int64_t selX, selY;
-    bool wasFounded = false;
+    double incrementalPoint = 0.7555555;
     img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(GetRadians(angleBegin)), Center.y + (radius - 5) * sin(GetRadians(angleBegin)), fillColor);
 
     auto angleMiddle = angleEnd - angleBegin;
 
     img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(GetRadians(angleEnd - 1)), Center.y + (radius - 5) * sin(GetRadians(angleEnd - 1)), fillColor);
 
-    for (double i = GetRadians(angleBegin); i <= GetRadians(angleEnd - 1); i += 0.0001)
+    for (double i = GetRadians(angleBegin); i <= GetRadians(angleEnd - 1); i += 0.001)
     {
+        img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(GetRadians(GetDegree(i) - incrementalPoint)), Center.y + (radius - 5) * sin(GetRadians(GetDegree(i) - incrementalPoint)), fillColor);
+        img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(GetRadians(GetDegree(i) - incrementalPoint)), Center.y + (radius - 5) * sin(i), fillColor);
+        img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(i), Center.y + (radius - 5) * sin(GetRadians(GetDegree(i) - incrementalPoint)), fillColor);
+    	
         img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(i), Center.y + (radius - 5) * sin(i), fillColor);
-        img.SetPixel(Center.x + (radius - 5) * cos(i), Center.y + (radius - 5) * sin(i), fillColor, false);
+    	
+        img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(i), Center.y + (radius - 5) * sin(GetRadians(GetDegree(i) + incrementalPoint)), fillColor);
+        img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(GetRadians(GetDegree(i) + incrementalPoint)), Center.y + (radius - 5) * sin(i), fillColor);
+        img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(GetRadians(GetDegree(i) + incrementalPoint)), Center.y + (radius - 5) * sin(GetRadians(GetDegree(i) + incrementalPoint)), fillColor);
     }
 }
 
@@ -176,11 +182,8 @@ void Charts::DrawPieChart(const std::vector<DataNode>& data_nodes)
 
     int64_t radius = (frame.GetDistance(frame.Top, frame.Bottom) / 2) - frame.Spacing.x;
 
-    /*img.DrawCircle(center.x, center.y, radius, lineColor, 5, false);
-    img.DrawCircle(center.x, center.y, radius - 4, COLOR_BLACK, 1, false);*/
-
-    double angleBegin = 0, angleEnd = 0;
-    int i = 0;
+    double angleBegin = 0;
+    double angleEnd = 0;
     for (DataNode node : data_nodes) {
         angleEnd = angleBegin + GetAngleByPercent(node.percent);
 
@@ -188,7 +191,6 @@ void Charts::DrawPieChart(const std::vector<DataNode>& data_nodes)
 
         std::cout << std::endl << "Begin: " << angleBegin << " End: " << angleEnd << std::endl;
         angleBegin = angleEnd;
-        i++;
     }
     std::cout << std::endl << angleEnd;
 }

@@ -25,6 +25,7 @@ private:
     inline int64_t GetPositionByPercent(const double& value, const int64_t& maxHeight) { return maxHeight - ceil((value * maxHeight) / 100); }
     inline double GetAngleByPercent(const double& value) { return (value * 360) / 100; }
     inline double GetRadians(const double& angle) { return angle * M_PI / 180.0; }
+    inline double GetDegree(const double& radians) { return radians * 180.0 / M_PI; }
 
     RGBColor GenerateColor(const uint64_t& seed)
     {
