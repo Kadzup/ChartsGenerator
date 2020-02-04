@@ -18,11 +18,11 @@ public:
 
 private:
     std::vector<int64_t> data;
-    void DrawTower(const Point& Top, const int64_t& containerWidth, int64_t spacing);
+    void DrawTower(const Point& Top, const int64_t& containerWidth, RGBColor fillColor, int64_t spacing);
     void DrawRectangleByLines(const Point& TopLeft, const Point& BottomRight, const RGBColor& outlineColor);
     inline void DrawCircleSelection(const Point& Center, const uint64_t& radius, const double& angleBegin, const double& angleEnd, const RGBColor& fillColor);
 
-    inline int64_t GetPositionByPercent(const double& value, const int64_t& maxHeight) { return maxHeight - ceil((value * maxHeight) / 100); }
+    inline int64_t GetPositionByPercent(const double& value, const int64_t& maxHeight) const { return maxHeight - ceil((value * maxHeight) / 100); }
     inline double GetAngleByPercent(const double& value) { return (value * 360) / 100; }
     inline double GetRadians(const double& angle) { return angle * M_PI / 180.0; }
     inline double GetDegree(const double& radians) { return radians * 180.0 / M_PI; }

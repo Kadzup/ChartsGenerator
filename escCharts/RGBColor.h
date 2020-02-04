@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 
+#define COLOR_DEFAULT RGBColor{204, 204, 204}
 #define COLOR_WHITE RGBColor{255, 255, 255}
 #define COLOR_BLACK RGBColor{0, 0, 0}
 #define COLOR_RED RGBColor{255, 0, 0}

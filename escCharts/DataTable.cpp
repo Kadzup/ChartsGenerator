@@ -64,3 +64,11 @@ void DataTable::CalculatePercent()
 	}
 }
 
+void DataTable::Set(vector<DataNode> _nodes)
+{
+	if (_nodes.empty())
+		return;
+
+	this->nodes = _nodes;
+	CalculatePercent();
+}

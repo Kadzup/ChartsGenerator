@@ -95,7 +95,7 @@ void Charts::DrawRectangleByLines(const Point& TopLeft, const Point& BottomRight
     img.DrawLine(BottomRight.x, TopLeft.y, TopLeft.x, TopLeft.y, outlineColor);
 }
 
-void Charts::DrawTower(const Point& Top, const int64_t& containerWidth, int64_t spacing = 5)
+void Charts::DrawTower(const Point& Top, const int64_t& containerWidth, RGBColor fillColor = COLOR_DEFAULT, int64_t spacing = 5)
 {
     assert(Top.x >= 0 and Top.y >= 0 and Top.x < img.Width() and Top.y < img.Height());
     assert(containerWidth > 0);
@@ -107,7 +107,10 @@ void Charts::DrawTower(const Point& Top, const int64_t& containerWidth, int64_t 
     img.DrawLine(Top.x - ((containerWidth - spacing) / 2) + 1, Top.y, Top.x - ((containerWidth - spacing) / 2) + 1, frame.Bottom.y, COLOR_BLUE);
     img.DrawLine(Top.x + ((containerWidth - spacing) / 2) - 1, Top.y, Top.x + ((containerWidth - spacing) / 2) - 1, frame.Bottom.y, COLOR_BLUE);
 
-    img.FillRectangle(LT.x, LT.y, RB.x, RB.y, GenerateColor(frame.GetDistance(Top, frame.Bottom) + frame.GetDistance({ Top.x - ((containerWidth - spacing) / 2) + 1, Top.y }, { Top.x + ((containerWidth - spacing) / 2) - 1, frame.Bottom.y })));
+	if(fillColor == COLOR_DEFAULT)
+		img.FillRectangle(LT.x, LT.y, RB.x, RB.y, GenerateColor(frame.GetDistance(Top, frame.Bottom) + frame.GetDistance({ Top.x - ((containerWidth - spacing) / 2) + 1, Top.y }, { Top.x + ((containerWidth - spacing) / 2) - 1, frame.Bottom.y })));
+    else
+        img.FillRectangle(LT.x, LT.y, RB.x, RB.y, fillColor);
 }
 
 void Charts::DrawTowerChart(const std::vector<DataNode>& data_nodes)
@@ -119,31 +122,50 @@ void Charts::DrawTowerChart(const std::vector<DataNode>& data_nodes)
     int64_t containerWidth = ceil(frame.GetDistance(frame.BottomLeft, frame.BottomRight) / data_nodes.size());
 
     Point containerCenter = Point{ frame.BottomLeft.x + containerWidth / 2, frame.BottomLeft.y };
-
-    for (DataNode node : data_nodes) {
+	
+    for (DataNode node : data_nodes)
+    {
         containerCenter.y = GetPositionByPercent(node.percent+5, maxHeight);
-        DrawTower(containerCenter, containerWidth);
+
+    	if (node.color.IsEmpty())
+    		DrawTower(containerCenter, containerWidth, node.color);
+        else
+            DrawTower(containerCenter, containerWidth);
+    	
         containerCenter.x += containerWidth;
     }
 }
 
-void Charts::DrawLineChart(const std::vector<DataNode>& data_nodes) {
+void Charts::DrawLineChart(const std::vector<DataNode>& data_nodes)
+{
     if (data_nodes.empty())
         return;
 
     int64_t maxHeight = img.Height() - frame.Top.y + frame.Spacing.y;
     int64_t partialPoint = ceil(frame.GetDistance(frame.BottomLeft, frame.BottomRight) / data_nodes.size());
+    int64_t bottomPos;
 
     Point pointCenter = frame.BottomLeft;
-    RGBColor lineColor = GenerateColor(NULL);
+    RGBColor lineColor;
 
-    for (DataNode node : data_nodes) {
-        img.DrawLine(pointCenter.x, pointCenter.y, pointCenter.x + partialPoint, GetPositionByPercent(node.percent, maxHeight), lineColor);
+    for (DataNode node : data_nodes)
+    {
+        if (node.color.IsEmpty() || node.color == COLOR_DEFAULT)
+            lineColor = GenerateColor(GetRadians(partialPoint));
+        else
+            lineColor = node.color;
 
-        img.DrawCircle(pointCenter.x, pointCenter.y, 4, COLOR_BLUE_LIGHT, 4, false, img.GetBGColor());
+        bottomPos = GetPositionByPercent(node.percent, maxHeight);
+
+        if (bottomPos >= frame.Bottom.y)
+            bottomPos = frame.Bottom.y;
+    	
+        img.DrawLine(pointCenter.x, pointCenter.y, pointCenter.x + partialPoint, bottomPos, lineColor);
+
+        img.DrawCircle(pointCenter.x, pointCenter.y, 4, lineColor, 4, false, img.GetBGColor());
         pointCenter.x += partialPoint;
-        pointCenter.y = GetPositionByPercent(node.percent, maxHeight);
-        img.DrawCircle(pointCenter.x, pointCenter.y, 4, COLOR_BLUE_LIGHT, 4, false, img.GetBGColor());
+        pointCenter.y = bottomPos;
+        img.DrawCircle(pointCenter.x, pointCenter.y, 4, lineColor, 4, false, img.GetBGColor());
     }
 }
 
@@ -175,7 +197,8 @@ void Charts::DrawPieChart(const std::vector<DataNode>& data_nodes)
     if (data_nodes.empty())
         return;
 
-    RGBColor lineColor = GenerateColor(data_nodes[0].percent + time(NULL));
+    RGBColor sliceColor;
+	
     Point center;
     center.y = frame.Bottom.y - frame.Bottom.y / 2 + frame.Spacing.y / 2;
     center.x = (frame.GetDistance(frame.Left, frame.Right) / 2) + frame.Spacing.x;
@@ -184,13 +207,19 @@ void Charts::DrawPieChart(const std::vector<DataNode>& data_nodes)
 
     double angleBegin = 0;
     double angleEnd = 0;
+
     for (DataNode node : data_nodes) {
         angleEnd = angleBegin + GetAngleByPercent(node.percent);
 
-        DrawCircleSelection(center, radius, angleBegin, angleEnd, GenerateColor(GetAngleByPercent(angleEnd)));
+        if (node.color.IsEmpty() || node.color == COLOR_DEFAULT)
+            sliceColor = GenerateColor(GetAngleByPercent(angleEnd));
+        else
+            sliceColor = node.color;
+    	
+        DrawCircleSelection(center, radius, angleBegin, angleEnd, sliceColor);
 
-        std::cout << std::endl << "Begin: " << angleBegin << " End: " << angleEnd << std::endl;
+        //std::cout << std::endl << "Begin: " << angleBegin << " End: " << angleEnd << std::endl;
         angleBegin = angleEnd;
     }
-    std::cout << std::endl << angleEnd;
+    //std::cout << std::endl << angleEnd;
 }
