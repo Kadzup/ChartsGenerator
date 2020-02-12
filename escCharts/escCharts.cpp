@@ -8,14 +8,14 @@ using namespace  std;
 int main()
 {
 	DataTable table;
-	table.Add("text1", 20);
+	table.Add("text1", 23);
+	//table.Add("text1", 90);
 	table.Add("text1", 15);
-	table.Add("text1", 78);
-	table.Add("text1", 11);
-	table.Add("text1", 302);
-	table.Add("text1", 200);
-	table.Add("text1", 87);
-	table.Add("text1", 9);
+	table.Add("text1", 45);
+	table.Add("text1", 5);
+	table.Add("text1", 19);
+	table.Add("text1", 34);
+	table.Add("text1", 12);
 	
     string pathName = "out/";
 	
@@ -27,20 +27,13 @@ int main()
 	Charts chart2(img2);
 	Charts chart3(img3);
 
-	chart.ShowFrame(true);
-	chart.ShowFrameCorners(true);
 	chart.DrawTowerChart(table.GetNodes());
-	chart.ShowFrame(true);
-	chart.ShowFrameCorners(true);
 	chart.Update();
 
-	chart2.ShowFrame(true);
-	chart2.ShowXY(true);
 	chart2.DrawLineChart(table.GetNodes());
 	chart2.Update();
 
 	chart3.DrawPieChart(table.GetNodes());
-	chart3.ShowFrame(true);
 	chart3.Update();
 	
     return 0;

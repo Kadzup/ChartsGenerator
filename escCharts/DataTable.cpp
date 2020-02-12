@@ -2,6 +2,16 @@
 #include <cassert>
 #include <algorithm>
 
+DataNode& DataNode::operator=(const DataNode& node) {
+	if (this != &node) {
+		this->title = node.title;
+		this->percent = node.percent;
+		this->value = node.value;
+		this->color = node.color;
+	}
+	return *this;
+}
+
 double DataTable::GetValueSum()
 {
 	double sum = 0;
@@ -27,6 +37,12 @@ double DataTable::GetPercentSum()
 void DataTable::Add(std::string Text, double Value)
 {
 	nodes.push_back({ Text, Value });
+	CalculatePercent();
+}
+
+void DataTable::Add(std::string Text, double Value, RGBColor Color)
+{
+	nodes.push_back({ Text, Value, Color });
 	CalculatePercent();
 }
 
