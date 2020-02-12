@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <ostream>
 
 #define COLOR_DEFAULT RGBColor{204, 204, 204}
 #define COLOR_WHITE RGBColor{255, 255, 255}
@@ -43,7 +44,11 @@ public:
 
     inline const bool operator == (const RGBColor& in) { return (this->r == in.r) && (this->g == in.g) && (this->b == in.b); }
     inline const bool operator != (const RGBColor& in) { return (this->r != in.r) || (this->g != in.g) || (this->b != in.b); }
-    
+    friend std::ostream& operator<<(std::ostream& output, const RGBColor& color)
+    {
+        output << "R: " << (int)color.r << " G: " << (int)color.g << " B: " << (int)color.b;
+	    return output;
+    }
     uint8_t r;
     uint8_t g;
     uint8_t b;

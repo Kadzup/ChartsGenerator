@@ -45,6 +45,24 @@ public:
 
     // Add DataNode vector in Table
     void Set(vector<DataNode> _nodes);
+
+	/*  Read data from file
+		FilePath As String
+		( path/path/file.type )
+		Separator As String
+		Default is ';'
+	 */
+    void ReadFromFile(const string& filePath, const char& separator);
+    /*  Save data to file
+        FilePath As String
+        ( path/path/file.type )
+        Separator As String
+        Default is ';'
+     */
+    void SaveToFile(const string& filePath, const char& separator);
+
+	// Unite Two DataTables
+    void Unite(const DataTable& table);
 	
 private:
     void CalculatePercent();
