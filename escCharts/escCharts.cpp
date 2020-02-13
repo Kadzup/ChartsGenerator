@@ -9,7 +9,7 @@ int main()
 {
 	DataTable table;
 	table.Add("text1", 23);
-	//table.Add("text1", 90);
+	table.Add("text1", 90);
 	table.Add("text1", 15);
 	table.Add("text1", 45);
 	table.Add("text1", 5);
@@ -18,6 +18,15 @@ int main()
 	table.Add("text1", 12);
 	
     string pathName = "out/";
+
+	table.SaveToFile(pathName + "data.csv", ';');
+	table.ReadFromFile(pathName + "data.csv", ';');
+
+	table.Add("text1", 100);
+	table.Add("text1", 200);
+	table.Add("text1", 100);
+	
+	table.SaveToFile(pathName + "data.csv", ';');
 	
     Image img(720, 480, pathName + "sample1.bmp", COLOR_WHITE);
     Image img2(720, 480, pathName + "sample2.bmp", COLOR_WHITE);

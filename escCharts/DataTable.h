@@ -40,6 +40,8 @@ public:
     void Clear() { nodes.clear(); };
 	// Add new DataNode in Vector
     void Add(std::string Text, double Value);
+	// Add new DataNode object to Vector
+    void Add(const DataNode& node);
     // Add new DataNode in Vector
     void Add(std::string Text, double Value, RGBColor Color);
 
@@ -65,6 +67,7 @@ public:
     void Unite(const DataTable& table);
 	
 private:
+    void ParseString(const vector<string>& input);
     void CalculatePercent();
     double GetValueSum();
     double GetPercentSum();

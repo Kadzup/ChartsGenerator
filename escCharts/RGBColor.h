@@ -27,6 +27,7 @@ public:
     RGBColor() {};
     ~RGBColor() {};
     RGBColor(uint8_t _r, uint8_t _g, uint8_t _b);
+    RGBColor(int _r, int _g, int _b);
 
     /*
      Set RGB Color by 3 parameters
@@ -46,7 +47,7 @@ public:
     inline const bool operator != (const RGBColor& in) { return (this->r != in.r) || (this->g != in.g) || (this->b != in.b); }
     friend std::ostream& operator<<(std::ostream& output, const RGBColor& color)
     {
-        output << "R: " << (int)color.r << " G: " << (int)color.g << " B: " << (int)color.b;
+        output << "RGB(" << (int)color.r << "," << (int)color.g << "," << (int)color.b << ")";
 	    return output;
     }
     uint8_t r;

@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <iostream>
+#include <xlocmon>
 
 DataNode& DataNode::operator=(const DataNode& node) {
 	if (this != &node) {
@@ -38,6 +40,12 @@ double DataTable::GetPercentSum()
 void DataTable::Add(std::string Text, double Value)
 {
 	nodes.push_back({ Text, Value });
+	CalculatePercent();
+}
+
+void DataTable::Add(const DataNode& node)
+{
+	nodes.push_back(node);
 	CalculatePercent();
 }
 
@@ -101,7 +109,7 @@ void DataTable::Unite(const DataTable& table)
 
 void DataTable::ReadFromFile(const string& filePath, const char& separator = ';')
 {
-	std::vector<std::pair<std::string, std::vector<int>>> result;
+	std::vector<std::pair<std::string, std::vector<string>>> result;
 
 	// Create an input filestream
 	std::ifstream myFile(filePath);
@@ -109,11 +117,9 @@ void DataTable::ReadFromFile(const string& filePath, const char& separator = ';'
 	// Make sure the file is open
 	if (!myFile.is_open()) throw std::runtime_error("Could not open file");
 
-	// Helper vars
 	std::string line, colname;
-	int val;
+	string val;
 
-	// Read the column names
 	if (myFile.good())
 	{
 		// Extract the first line in the file
@@ -126,35 +132,41 @@ void DataTable::ReadFromFile(const string& filePath, const char& separator = ';'
 		while (std::getline(ss, colname, separator)) {
 
 			// Initialize and add <colname, int vector> pairs to result
-			result.push_back({ colname, std::vector<int> {} });
+			result.push_back({ colname, std::vector<string> {} });
 		}
 	}
 
-	// Read data, line by line
+	long i = 0, j = 0;
+	vector<vector<string>> table;
+
 	while (std::getline(myFile, line))
 	{
-		// Create a stringstream of the current line
 		std::stringstream ss(line);
 
-		// Keep track of the current column index
-		int colIdx = 0;
-
-		// Extract each integer
-		while (ss >> val) {
-
-			// Add the current integer to the 'colIdx' column's values vector
-			result.at(colIdx).second.push_back(val);
-
-			// If the next token is a comma, ignore it and move on
-			if (ss.peek() == ',') ss.ignore();
-
-			// Increment the column index
-			colIdx++;
+		string word = "";
+		table.push_back(vector <string>());
+		
+		for(int k = 0; k < line.size(); k++){
+			if(line[k] == ';')
+			{
+				table[i].push_back(word);
+				word = "";
+				j++;
+			}
+			else
+			{
+				word += line[k];
+			}
 		}
+		j = 0;
+		i++;
+			
 	}
 
-	// Close file
 	myFile.close();
+	
+	for(auto&& line : table)
+		this->ParseString(line);
 }
 
 void DataTable::SaveToFile(const string& filePath, const char& separator = ';')
@@ -164,21 +176,59 @@ void DataTable::SaveToFile(const string& filePath, const char& separator = ';')
 	
 	std::ofstream myFile(filePath);
 
-	vector<string> colnames;
-	colnames.push_back("Title");
-	colnames.push_back("Value");
-	colnames.push_back("Percent");
-	colnames.push_back("Color");
-	
-	for (auto& colname : colnames)
-		myFile << colname << separator;
-
-	myFile << "\n";
+	myFile << "Title" << separator << "Value" << separator << "Percent" << separator << "Color" << separator << "\n";
 
 	for(auto&& node : this->nodes)
 	{
-		myFile << node.title << separator << node.value << separator << node.percent << separator << node.color << "\n";
+		myFile << node.title << separator << node.value << separator << node.percent << separator << node.color << separator << "\n";
 	}
 	
 	myFile.close();
+}
+
+void DataTable::ParseString(const vector<string>& input)
+{
+	if (input.empty() || input.size() < 3)
+		return;
+
+	DataNode newNode;
+
+	newNode.title = input[0];
+	newNode.value = stod(input[1]);
+	newNode.percent = stoi(input[2]);
+	
+	int rgbInt[3], k = 0;
+	string rgb = input[3], word = "";
+	
+	for(int i = 0; i < input[3].size(); i++)
+	{
+		if(rgb[i] == ',' || rgb[i] == ')')
+		{
+			rgbInt[k] = stoi(word);
+			k++;
+			word = "";
+		}
+		else if(word == "RGB(")
+			word = rgb[i];
+		else
+		{
+			word += rgb[i];
+		}
+	}
+	
+	int r, g, b;
+	r = rgbInt[0];
+	g = rgbInt[1];
+	b = rgbInt[2];
+	
+	if (rgbInt[0] < 0 || rgbInt[0] > 255)
+		r = 0;
+	if (rgbInt[1] < 0 || rgbInt[1] > 255)
+		g = 0;
+	if (rgbInt[2] < 0 || rgbInt[2] > 255)
+		b = 0;
+	
+	newNode.color = RGBColor();
+
+	this->Add(newNode);
 }
