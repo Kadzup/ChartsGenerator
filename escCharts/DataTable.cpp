@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <xlocmon>
 
 DataNode& DataNode::operator=(const DataNode& node) {

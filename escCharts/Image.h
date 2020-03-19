@@ -131,4 +131,3 @@ private:
     RGBColor backgroundColor;
     vector<vector<RGBColor>> buffer;
 };
-
