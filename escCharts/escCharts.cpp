@@ -1,49 +1,19 @@
-﻿#include "Charts.h"
-#include "DataTable.h"
-#include "Image.h"
-#include <vector>
-
-using namespace  std;
+﻿#include "Image.h"
 
 int main()
 {
-	DataTable table;
-	table.Add("text1", 23);
-	table.Add("text1", 90);
-	table.Add("text1", 15);
-	table.Add("text1", 45);
-	table.Add("text1", 5);
-	table.Add("text1", 19);
-	table.Add("text1", 34);
-	table.Add("text1", 12);
-	
     string pathName = "out/";
 
-	table.SaveToFile(pathName + "data.csv", ';');
-	table.ReadFromFile(pathName + "data.csv", ';');
-
-	table.Add("text1", 100);
-	table.Add("text1", 200);
-	table.Add("text1", 100);
+    Image img(720, 480, pathName + "image.bmp", COLOR_WHITE);
 	
-	table.SaveToFile(pathName + "data.csv", ';');
+    Point center{img.Width()/2, img.Height()/2};
+
+	for(int i = 0; i < 10; i++)
+	{
+		img.DrawCircle(center.x-i*5, center.y-i*5, 150-i*5, {0+i+1*2, 20+i+1*2, 50+i+1*2}, 5, false, img.GetBGColor());
+	}
 	
-    Image img(720, 480, pathName + "sample1.bmp", COLOR_WHITE);
-    Image img2(720, 480, pathName + "sample2.bmp", COLOR_WHITE);
-    Image img3(720, 720, pathName + "sample3.bmp", COLOR_WHITE);
-	
-	Charts chart(img);
-	Charts chart2(img2);
-	Charts chart3(img3);
-
-	chart.DrawTowerChart(table.GetNodes());
-	chart.Update();
-
-	chart2.DrawLineChart(table.GetNodes());
-	chart2.Update();
-
-	chart3.DrawPieChart(table.GetNodes());
-	chart3.Update();
+	img.Save();
 	
     return 0;
 }

@@ -42,11 +42,11 @@ public:
     void ShowXY(const bool& show);
 
 	/* Build Tower Charts on Image */
-    void DrawTowerChart(const std::vector<DataNode>& data_nodes);
+    void DrawTowerChart(DataTable& data_table);
 	/* Build Line Charts on Image */
-    void DrawLineChart(const std::vector<DataNode>& data_nodes);
+    void DrawLineChart(DataTable& data_table);
 	/* Build Pie Charts on Image */
-    void DrawPieChart(const std::vector<DataNode>& data_nodes);
+    void DrawPieChart(DataTable& data_table);
 
 	/* Get Current Image */
     inline Image GetImage() { return img; }

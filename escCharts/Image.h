@@ -113,19 +113,6 @@ public:
     RGBColor GetPixelColor(const int64_t& x, const int64_t& y) const;
 
     void FloodFill(int64_t x, int64_t y, RGBColor newColor);
-	
-	bool IsBufferValid()
-	{
-		for(uint64_t i = 0; i < buffer.size(); i++)
-		{
-			for(uint64_t j = 0; j < buffer[i].size(); j++)
-			{
-                cout << buffer[i][j].r << ", " << buffer[i][j].g << ", " << buffer[i][j].b << "\t";
-			}
-            cout << endl;
-		}
-        return true;
-	}
 
 private:
     void Init(int64_t _width, int64_t _height);

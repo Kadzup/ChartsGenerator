@@ -15,7 +15,7 @@ public:
 	 This point and Second point
 	 Return Double value
 	 */
-    double distanceTo(const Point& seconPoint);
+    double DistanceTo(const Point& seconPoint);
 
     inline Point operator + (const Point& rObj) { return Point{ x + rObj.x, y + rObj.y }; }
     inline Point operator - (const Point& rObj) { return Point{ x - rObj.x, y - rObj.y }; }

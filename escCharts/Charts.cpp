@@ -113,17 +113,17 @@ void Charts::DrawTower(const Point& Top, const int64_t& containerWidth, RGBColor
         img.FillRectangle(LT.x, LT.y, RB.x, RB.y, fillColor);
 }
 
-void Charts::DrawTowerChart(const std::vector<DataNode>& data_nodes)
+void Charts::DrawTowerChart(DataTable& data_table)
 {
-    if (data_nodes.empty())
+    if (data_table.GetNodes().empty())
         return;
 
     int64_t maxHeight = img.Height() - frame.Top.y + frame.Spacing.y;
-    int64_t containerWidth = ceil(frame.GetDistance(frame.BottomLeft, frame.BottomRight) / data_nodes.size());
+    int64_t containerWidth = ceil(frame.GetDistance(frame.BottomLeft, frame.BottomRight) / data_table.GetNodes().size());
 
     Point containerCenter = Point{ frame.BottomLeft.x + containerWidth / 2, frame.BottomLeft.y };
 	
-    for (DataNode node : data_nodes)
+    for (DataNode node : data_table.GetNodes())
     {
         containerCenter.y = GetPositionByPercent(node.percent+5, maxHeight);
 
@@ -136,19 +136,19 @@ void Charts::DrawTowerChart(const std::vector<DataNode>& data_nodes)
     }
 }
 
-void Charts::DrawLineChart(const std::vector<DataNode>& data_nodes)
+void Charts::DrawLineChart(DataTable& data_table)
 {
-    if (data_nodes.empty())
+    if (data_table.GetNodes().empty())
         return;
 
     int64_t maxHeight = img.Height() - frame.Top.y + frame.Spacing.y;
-    int64_t partialPoint = ceil(frame.GetDistance(frame.BottomLeft, frame.BottomRight) / data_nodes.size());
+    int64_t partialPoint = ceil(frame.GetDistance(frame.BottomLeft, frame.BottomRight) / data_table.GetNodes().size());
     int64_t bottomPos;
 
     Point pointCenter = frame.BottomLeft;
     RGBColor lineColor;
 
-    for (DataNode node : data_nodes)
+    for (DataNode node : data_table.GetNodes())
     {
         if (node.color.IsEmpty() || node.color == COLOR_DEFAULT)
             lineColor = GenerateColor(GetRadians(partialPoint));
@@ -171,7 +171,7 @@ void Charts::DrawLineChart(const std::vector<DataNode>& data_nodes)
 
 void Charts::DrawCircleSelection(const Point& Center, const uint64_t& radius, const double& angleBegin, const double& angleEnd, const RGBColor& fillColor)
 {
-    double incrementalPoint = 0.7555555;
+    double incrementalPoint = 0.6555555;
     img.DrawLine(Center.x, Center.y, Center.x + (radius - 5) * cos(GetRadians(angleBegin)), Center.y + (radius - 5) * sin(GetRadians(angleBegin)), fillColor);
 
     auto angleMiddle = angleEnd - angleBegin;
@@ -192,9 +192,9 @@ void Charts::DrawCircleSelection(const Point& Center, const uint64_t& radius, co
     }
 }
 
-void Charts::DrawPieChart(const std::vector<DataNode>& data_nodes)
+void Charts::DrawPieChart(DataTable& data_table)
 {
-    if (data_nodes.empty())
+    if (data_table.GetNodes().empty())
         return;
 
     RGBColor sliceColor;
@@ -208,7 +208,7 @@ void Charts::DrawPieChart(const std::vector<DataNode>& data_nodes)
     double angleBegin = 0;
     double angleEnd = 0;
 
-    for (DataNode node : data_nodes) {
+    for (DataNode node : data_table.GetNodes()) {
         angleEnd = angleBegin + GetAngleByPercent(node.percent);
 
         if (node.color.IsEmpty() || node.color == COLOR_DEFAULT)
@@ -218,8 +218,6 @@ void Charts::DrawPieChart(const std::vector<DataNode>& data_nodes)
     	
         DrawCircleSelection(center, radius, angleBegin, angleEnd, sliceColor);
 
-        //std::cout << std::endl << "Begin: " << angleBegin << " End: " << angleEnd << std::endl;
         angleBegin = angleEnd;
     }
-    //std::cout << std::endl << angleEnd;
 }
